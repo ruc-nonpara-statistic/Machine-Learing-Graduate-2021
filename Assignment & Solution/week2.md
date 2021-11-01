@@ -1,6 +1,7 @@
 ##### 第二周作业
 
 **一、证明：多元正态分布的边缘分布也是正态分布：**
+
 $$
 X=\left[\begin{array}{l}
 X_{1} \\
@@ -14,6 +15,7 @@ X_{2}
 \Sigma_{21} & \Sigma_{22}
 \end{array}\right]
 $$
+
 若$X \sim N(\mu, \Sigma)$ ，证明$X_{1} \sim N\left(\mu_{1}, \Sigma_{11}\right), X_{2} \sim N\left(\mu_{2}, \Sigma_{22}\right)$
 
 **二、证明：实对称矩阵一定正交相似于对角矩阵**（Slide P16）
