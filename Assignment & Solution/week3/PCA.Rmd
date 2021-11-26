@@ -1,0 +1,50 @@
+---
+title: "第三周作业 PCA"
+output: 
+  html_document: 
+    theme: cerulean
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### **2. USArrests数据的主成分分析**
+
+USArrests是R的内置数据集，包含50个样本，4个变量。要求对3个变量（Assault, Murder, Rape）做PCA，画出载荷图，观测点的坐标，以及碎石图，并对结果进行适当分析。
+
+#### 提取数据<br>
+选择需要做PCA的Assault, Murder, Rape变量。
+```{r}
+data("USArrests")
+USArrests=USArrests[,-3]
+head(USArrests)
+```
+
+#### PCA
+```{r}
+arrests.scaled <- scale(USArrests) # 数据标准化
+arrests.pca <- princomp(arrests.scaled)
+summary(arrests.pca)
+```
+
+#### 碎石图
+```{r}
+screeplot(arrests.pca,type="line",main="碎石图")
+```
+
+前两个主成分累积解释了总方差变异的93.9%，因此可以选择前两个主成分做分析。
+
+#### 载荷图
+```{r}
+loadings(arrests.pca)
+```
+
+```{r}
+head(arrests.pca$scores)
+```
+
+
+```{r}
+biplot(arrests.pca,scale=0,cex=c(0.6,1),col=c(4,2))
+```
