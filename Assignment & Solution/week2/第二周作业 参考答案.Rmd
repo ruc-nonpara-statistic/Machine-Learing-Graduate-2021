@@ -1,0 +1,237 @@
+---
+title: ""
+output: 
+  html_document: 
+    theme: cerulean
+---
+```{r setup, include=FALSE,warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### **第二周作业**
+#### **一、证明：多元正态分布的边缘分布也是正态分布**(可参考PRML 2.3.2)
+$$
+X=\left[\begin{array}{l}
+X_{a} \\
+X_{b}
+\end{array}\right], \quad \mu=\left[\begin{array}{l}
+\mu_{a} \\
+\mu_{b}
+\end{array}\right], \quad
+\Sigma=\left[\begin{array}{ll}
+\Sigma_{aa} & \Sigma_{ab} \\
+\Sigma_{ba} & \Sigma_{bb}
+\end{array}\right]
+$$
+若$X \sim N(\mu, \Sigma)$ ，证明$X_{a} \sim N\left(\mu_{a}, \Sigma_{aa}\right), X_{b} \sim N\left(\mu_{b}, \Sigma_{bb}\right)$
+
+**证明：**<br>
+
+
+边缘概率分布为 
+$p\left(\boldsymbol{x}_{a}\right)=\int p\left(\boldsymbol{x}_{a}, \boldsymbol{x}_{b}\right) \mathrm{d} \boldsymbol{x}_{b}$
+
+协方差矩阵的逆矩阵记为$\boldsymbol{\Lambda} \equiv \boldsymbol{\Sigma}^{-1}$，精度矩阵的划分为
+$\mathbf{\Lambda}=\left(\begin{array}{ll}\boldsymbol{\Lambda}_{aa} & \boldsymbol{\Lambda}_{ab} \\ \boldsymbol{\Lambda}_{ba} & \boldsymbol{\Lambda}_{bb}\end{array}\right)$
+
+$X$联合分布的指数项的二次型：
+$$
+\begin{aligned}
+&-\frac{1}{2}(\boldsymbol{x}-\boldsymbol{\mu})^{T} \boldsymbol{\Sigma}^{-1}(\boldsymbol{x}-\boldsymbol{\mu})= \\
+&\quad-\frac{1}{2}\left(\boldsymbol{x}_{a}-\boldsymbol{\mu}_{a}\right)^{T} \boldsymbol{\Lambda}_{a a}\left(\boldsymbol{x}_{a}-\boldsymbol{\mu}_{a}\right)-\frac{1}{2}\left(\boldsymbol{x}_{a}-\boldsymbol{\mu}_{a}\right)^{T} \boldsymbol{\Lambda}_{a b}\left(\boldsymbol{x}_{b}-\boldsymbol{\mu}_{b}\right) \\
+&\quad-\frac{1}{2}\left(\boldsymbol{x}_{b}-\boldsymbol{\mu}_{b}\right)^{T} \boldsymbol{\Lambda}_{b a}\left(\boldsymbol{x}_{a}-\boldsymbol{\mu}_{a}\right)-\frac{1}{2}\left(\boldsymbol{x}_{b}-\boldsymbol{\mu}_{b}\right)^{T} \boldsymbol{\Lambda}_{b b}\left(\boldsymbol{x}_{b}-\boldsymbol{\mu}_{b}\right)
+\end{aligned}
+\tag{2.70}
+$$
+
+其中关于$x_b$的项有
+$$
+-\frac{1}{2} \boldsymbol{x}_{b}^{T} \boldsymbol{\Lambda}_{b b} \boldsymbol{x}_{b}+\boldsymbol{x}_{b}^{T} \boldsymbol{m}=-\frac{1}{2}\left(\boldsymbol{x}_{b}-\boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{m}\right)^{T} \boldsymbol{\Lambda}_{b b}\left(\boldsymbol{x}_{b}-\boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{m}\right)+\frac{1}{2} \boldsymbol{m}^{T} \boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{m}
+\tag{2.84}
+$$
+
+其中
+$$
+\boldsymbol{m}=\boldsymbol{\Lambda}_{b b} \boldsymbol{\mu}_{b}-\boldsymbol{\Lambda}_{b a}\left(\boldsymbol{x}_{a}-\boldsymbol{\mu}_{a}\right)
+\tag{2.85}
+$$
+整理后的上式的第二项与$x_b$无关，所以对于$x_b$积分的形式为：
+$$
+\int \exp \left\{-\frac{1}{2}\left(\boldsymbol{x}_{b}-\boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{m}\right)^{T} \boldsymbol{\Lambda}_{b b}\left(\boldsymbol{x}_{b}-\boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{m}\right)\right\} \mathrm{d} \boldsymbol{x}_{b}
+\tag{2.86}
+$$
+该结构可以通过对$x_b$配出平方项的方法积分出来。那么唯一与$x_a$相关的项就是公式（2.84）的右侧的最后一项，其中m由公式（2.85）给出。把这一项与公式（2.70）中余下的与$x_a$相关的项结合，我们有：
+$$
+\begin{aligned}
+\frac{1}{2}\left[\boldsymbol{\Lambda}_{b b} \boldsymbol{\mu}_{b}\right.&\left.-\boldsymbol{\Lambda}_{b a}\left(\boldsymbol{x}_{a}-\boldsymbol{\mu}_{a}\right)\right]^{T} \boldsymbol{\Lambda}_{b b}^{-1}\left[\boldsymbol{\Lambda}_{b b} \boldsymbol{\mu}_{b}-\boldsymbol{\Lambda}_{b a}\left(\boldsymbol{x}_{a}-\boldsymbol{\mu}_{a}\right)\right] \\
+&-\frac{1}{2} \boldsymbol{x}_{a}^{T} \boldsymbol{\Lambda}_{a a} \boldsymbol{x}_{a}+\boldsymbol{x}_{a}^{T}\left(\boldsymbol{\Lambda}_{a a} \boldsymbol{\mu}_{a}+\boldsymbol{\Lambda}_{a b} \boldsymbol{\mu}_{b}\right)+\text { 常数 } \\
+=&-\frac{1}{2} \boldsymbol{x}_{a}^{T}\left(\boldsymbol{\Lambda}_{a a}-\boldsymbol{\Lambda}_{a b} \boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{\Lambda}_{b a}\right) \boldsymbol{x}_{a} \\
+&+\boldsymbol{x}_{a}^{T}\left(\boldsymbol{\Lambda}_{a a}-\boldsymbol{\Lambda}_{a b} \boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{\Lambda}_{b a}\right) \boldsymbol{\mu}_{a}+\text { 常数 }
+\end{aligned}
+\tag{2.87}
+$$
+注意一个高斯分布$\mathcal{N}(\boldsymbol{x} \mid \boldsymbol{\mu}, \boldsymbol{\Sigma})$的指数项可以写成：
+$$
+-\frac{1}{2}(\boldsymbol{x}-\boldsymbol{\mu})^{T} \boldsymbol{\Sigma}^{-1}(\boldsymbol{x}-\boldsymbol{\mu})=-\frac{1}{2} \boldsymbol{x}^{T} \boldsymbol{\Sigma}^{-1} \boldsymbol{x}+\boldsymbol{x}^{T} \boldsymbol{\Sigma}^{-1} \boldsymbol{\mu}+\text { 常数 }
+$$
+
+该二次型定义了高斯分布的指数项，因此如果把普通的二次型表示成上式右侧的形式，令$x$中的二阶项的系数矩阵等于协方差矩阵的逆矩阵$\Sigma^{-1}$，令$x$中的线性项的系数等于$\Sigma^{-1}\mu$，这样我们就可以得到$\mu$。
+
+
+所以有$p(x_a)$的协方差矩阵和均值为：
+$$\boldsymbol{\Sigma}_{a}=\left(\boldsymbol{\Lambda}_{a a}-\boldsymbol{\Lambda}_{a b} \boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{\Lambda}_{b a}\right)^{-1}$$
+$$
+\boldsymbol{\Sigma}_{a}\left(\boldsymbol{\Lambda}_{a a}-\boldsymbol{\Lambda}_{a b} \boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{\Lambda}_{b a}\right) \boldsymbol{\mu}_{a}=\boldsymbol{\mu}_{a}
+$$
+
+
+注意精度矩阵和协方差矩阵的分块矩阵有如下关系：
+$$
+\left(\begin{array}{ll}
+\boldsymbol{\Lambda}_{a a} & \boldsymbol{\Lambda}_{a b} \\
+\boldsymbol{\Lambda}_{b a} & \boldsymbol{\Lambda}_{b b}
+\end{array}\right)^{-1}=\left(\begin{array}{ll}
+\boldsymbol{\Sigma}_{a a} & \boldsymbol{\Sigma}_{a b} \\
+\boldsymbol{\Sigma}_{b a} & \boldsymbol{\Sigma}_{b b}
+\end{array}\right)
+$$
+由于分块矩阵满足
+$$
+\left(\begin{array}{ll}
+\boldsymbol{A} & \boldsymbol{B} \\
+\boldsymbol{C} & \boldsymbol{D}
+\end{array}\right)^{-1}=\left(\begin{array}{cc}
+\boldsymbol{M} & -\boldsymbol{M} \boldsymbol{B} \boldsymbol{D}^{-1} \\
+-\boldsymbol{D}^{-1} \boldsymbol{C M} & \boldsymbol{D}^{-1}+\boldsymbol{D}^{-1} \boldsymbol{C M B D}^{-1}
+\end{array}\right)
+$$
+其中$\boldsymbol{M}=\left(\boldsymbol{A}-\boldsymbol{B} \boldsymbol{D}^{-1} \boldsymbol{C}\right)^{-1}$。
+
+所以有
+$$
+\left(\boldsymbol{\Lambda}_{a a}-\boldsymbol{\Lambda}_{a b} \boldsymbol{\Lambda}_{b b}^{-1} \boldsymbol{\Lambda}_{b a}\right)^{-1}=\boldsymbol{\Sigma}_{a a}
+$$
+故边缘概率分布为$p\left(\boldsymbol{x}_{a}\right)=\mathcal{N}\left(\boldsymbol{x}_{a} \mid \boldsymbol{\mu}_{a}, \mathbf{\Sigma}_{a a}\right)$。
+
+#### **二、证明：实对称矩阵一定正交相似于对角矩阵**（Slide P16）
+
+**证明：**<br>
+使用数学归纳法证明：
+
+n=1时显然成立。<br>
+假设任意一个$n-1$级实对称矩阵都能正交相似于对角矩阵，来看$n$级实对称矩阵A。<br>
+取 A的一个特征值$\lambda_1$和对应的单位特征向量$\eta_{1}$，$\eta_{1}$可扩充为$R^{n}$的一个基，然后经过正交和标准化后可以得到一组标准正交基$T=\left\{\eta_{1}, \eta_{2} \ldots \eta_{n}\right\}$。
+
+
+令$T_1=(\eta_1，\eta_2，…，\eta_n)$, 则$T_1$是n级正交矩阵,
+
+$$
+T_1^{-1}AT_1=T_1^{-1}(A\eta_1，A\eta_2，…，A\eta_n)=(T_1^{-1}\lambda_1\eta_1，T_1^{-1}A\eta_2，…，T_1^{-1}A\eta_n)
+$$
+
+因为$T_{1}^{-1} T_{1}=1$，所以$T_{1}^{-1}\left(\eta_{1} \cdot \eta_{2}, \cdots, \eta_{n}\right)=\left(\varepsilon_{1}, \epsilon_{2}, \cdots, \varepsilon_{n}\right)$。于是有$T_{1}^{-1} \eta_{1}=\varepsilon_{1}$。$T_{1}^{-1} A T_{1}$ 的第 1 列是 $\lambda_{1} \in_{1}$. 因此可以设
+$$
+T_{1}^{-1} A T_{1}=\left(\begin{array}{cc}\lambda_{1} & a \\ 0 & B\end{array}\right)
+$$
+由于 $T_{1}$ 是正交矩阵, $A$ 是实对称矩阵, 因此 $T_{1}^{-1} A T_{1}$ 戊是实对称矩阵. 从而得, $a=0$, 井且 $B$是 $n-1$级实对称矩阵。 根据归纳假设,有 $n-1$ 级正交矩阵$T_2$，使得$T_2^{-1}BT_2=diag \lbrace \lambda_2，…，\lambda_n \rbrace$。
+
+令 $T=T_{1}\left(\begin{array}{cc}1 & 0 \\ 0 & T_{2}\end{array}\right)$, 则 $T$ 为正交阵，
+
+$$
+\begin{aligned} T^{-1} A T &=\left(\begin{array}{cc}1 & 0 \\ 0 & T_{2}\end{array}\right)^{T} T_{1}^{-1} A T_{1}\left(\begin{array}{cc}1 & 0 \\ 0 & T_{2}\end{array}\right) \\ &=\left(\begin{array}{cc}1 & 0 \\ 0 & T_{2}\end{array}\right)^{T}\left(\begin{array}{cc}\lambda_{1} & 0 \\ 0 & B\end{array}\right)\left(\begin{array}{cc}1 & 0 \\ 0 & T_{2}\end{array}\right) \\ &=\left(\begin{array}{cc}\lambda_{1} & 0 \\ 0 & T_{2}^{-1} B T_{2}\end{array}\right) \\ &=\operatorname{diag}\left\{\lambda_{1}, \lambda_{2}, \ldots, \lambda_{n}\right\} \end{aligned}
+$$
+
+#### **三、**
+
+3.1 将$8\times8$维的数据文件读入(见adj_8times8.csv)，记为A矩阵。
+```{r}
+A = as.matrix(read.csv("adj_8times8.csv",header=F))
+A
+```
+
+3.2 对矩阵A求特征根和特征向量，记最大的特征根为$\lambda_{1}$，对应的特征向量记为$\xi_{1}$，第二大特征根及特征向量为$\lambda_{2},\xi_{2}$，依此类推。
+```{r}
+A.e = eigen(A)
+lambda = A.e$values
+xi = A.e$vectors
+lambda
+xi
+```
+
+3.3 计算$\frac{\xi_{2}}{\xi_{1}}, \frac{\xi_{3}}{\xi_{1}}$,即对应元素相除，得到两个向量，按列合并为矩阵$B_{8\times2}$。
+```{r}
+B <- cbind(xi[,2]/xi[1],xi[,3]/xi[,1])
+B
+```
+
+3.4 可以将矩阵$B$看作8个点的坐标，使用k-means方法进行聚类，并分析聚类的效果。
+```{r message=FALSE, warning=FALSE}
+c2 = kmeans(B,2)
+c3 = kmeans(B,3)
+c4 = kmeans(B,4)
+
+df_b = data.frame(B,c2$cluster,c3$cluster,c4$cluster)
+df_b[,3:5]=lapply(df_b[,3:5],factor)
+
+library(ggplot2)
+library(ggrepel)
+library(ggpubr)
+p1 = ggplot(df_b,aes(x=X1,y=X2,colour=c2.cluster,label=rownames(df_b)))+
+  geom_point()+geom_label_repel(aes(x=X1,y=X2,label=rownames(df_b)),data=df_b)+theme_bw()
+p2 = ggplot(df_b,aes(x=X1,y=X2,colour=c3.cluster,label=rownames(df_b)))+
+  geom_point()+geom_label_repel(aes(x=X1,y=X2,label=rownames(df_b)),data=df_b)+theme_bw()
+p3 = ggplot(df_b,aes(x=X1,y=X2,colour=c4.cluster,label=rownames(df_b)))+
+  geom_point()+geom_label_repel(aes(x=X1,y=X2,label=rownames(df_b)),data=df_b)+theme_bw()
+```
+
+```{r}
+p1
+p2
+p3
+```
+
+
+
+
+```{r message=FALSE, warning=FALSE}
+library(igraph)
+```
+```{r}
+g <- graph.adjacency(A,mode = "undirected")
+plot(g)
+```
+
+Kmeans结果具有随机性。原始矩阵A是一个网络邻接矩阵，网络共有8个节点，如果点i和点j之间有连接的边，那么$A_{ij}$=1，否则为0。从网络结构来看，分为两类合适，1，2，3，8和4，5，6，7都是类内联通。
+
+
+#### **四、**
+
+4.1 给出矩阵A和向量b，计算回归方程Ax=b中的x（参见cs229-linalg.pdf第27页）。
+
+方程的解为$x=\left(A^{T} A\right)^{-1} A^{T} b$。
+```{r}
+df=read.csv("LeastSq.csv",header=T)
+A=as.matrix(df[,1:2])
+b=df[,3]
+x = solve(t(A) %*% A) %*% t(A) %*% b
+x
+```
+
+
+4.2 计算矩阵$X^TA^TAX$对$X$的一阶导数。<br>
+一阶导：$\frac{\partial X^TA^TAX}{\partial X}=2A^TAX$
+
+```{r}
+d1=2*t(A)%*%A %*% x
+#或者使用crossprod()函数，返回矩阵内积。d1=2*crossprod(A) %*% x
+d1
+```
+
+
+4.3 计算矩阵$X^TA^TAX$对$X$的二阶导数。<br>
+二阶导：$\frac{\partial^2 X^TA^TAX}{\partial X^2}=2A^TA$
+```{r}
+d2=2*t(A)%*%A
+d2
+```
+
